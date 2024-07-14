@@ -13,7 +13,7 @@ if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 
 @router.post("/upload_dicom/", response_model=schemas.DICOMFile)
-async def upload_dicom(file: UploadFile = File(...), db: Session = Depends(database.get_db)):
+async def upload_dicom(file: UploadFile = File(...), db: Session = Depends(database.get_db), current_user: schemas.User = Depends(auth.get_current_active_user)):
     file_path = os.path.join(UPLOAD_FOLDER, file.filename)
     with open(file_path, "wb") as buffer:
         buffer.write(await file.read())
@@ -25,7 +25,7 @@ async def upload_dicom(file: UploadFile = File(...), db: Session = Depends(datab
         "study_id": dicom_data.StudyID,
         "modality": dicom_data.Modality,
         "institution_name": dicom_data.InstitutionName,
-        "user_id": 1
+        "user_id": current_user.id
     }
 
     dicom_file = schemas.DICOMFileCreate(**metadata)
