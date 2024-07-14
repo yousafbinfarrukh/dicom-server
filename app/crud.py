@@ -14,3 +14,10 @@ def create_user(db: Session, user: schemas.UserCreate):
     db.commit()
     db.refresh(db_user)
     return db_user
+
+def create_dicom_file(db: Session, dicom_file: schemas.DICOMFileCreate):
+    db_dicom = models.DICOMFile(**dicom_file.dict())
+    db.add(db_dicom)
+    db.commit()
+    db.refresh(db_dicom)
+    return db_dicom

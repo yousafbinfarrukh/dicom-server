@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from .routers import users
+from .routers import users, dicom
 from .database import engine
 from .models import Base
 
@@ -21,3 +21,4 @@ def get_status():
     return {"status": "running"}
 
 app.include_router(users.router, prefix="/users")
+app.include_router(dicom.router, prefix="/dicom")
